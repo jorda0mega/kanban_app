@@ -42,11 +42,11 @@ if(TARGET == "start" || !TARGET){
 	module.exports = merge(common, {
 		devtool: "eval",
 		module: {
-			loaders: {
+			loaders: [{
 				test: /\.jsx?/,
-				loaders: ["babel"],
+				loaders: ["react-hot","babel"],
 				include: path.resolve(ROOT_PATH, "app")
-			}
+			}]
 		},
 		plugins: [
 			new webpack.HotModuleReplacementPlugin()
