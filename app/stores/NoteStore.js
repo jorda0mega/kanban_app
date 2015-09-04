@@ -6,10 +6,14 @@ class NoteStore {
 	constructor() {
 		this.bindActions(NoteActions);
 
-		this.notes = this.notes || [];
+		this.notes = [];
+
+		this.exportPublicMethods({
+			get: this.get.bind(this)
+		});
 	}
 	create(note) {
-		const notes = this.notes
+		const notes = this.notes;
 
 		note.id = uuid.v4();
 
@@ -18,7 +22,7 @@ class NoteStore {
 		});
 	}
 	update({id, task}) {
-		let notes = this.notes
+		let notes = this.notes;
 		const noteIndex = this.findNote(id);
 
 		if(noteIndex < 0) {
@@ -26,12 +30,14 @@ class NoteStore {
 		}
 
 		notes[noteIndex].task = task;
+
+		this.setState({notes});
 	}
 	delete(id) {
 		const notes = this.notes;
 		const noteIndex = this.findNote(id);
 
-		if(noteIndex) {
+		if(noteIndex < 0) {
 			return;
 		}
 
@@ -44,10 +50,13 @@ class NoteStore {
 		const noteIndex = notes.findIndex((note) => note.id === id);
 
 		if(noteIndex < 0) {
-			console.warn("Failed to find note", notes, id);
+			console.warn('Failed to find note', notes, id);
 		}
 
 		return noteIndex;
+	}
+	get(ids) {
+		return (ids || []).map((id) => this.notes[this.findNote(id)]);
 	}
 }
 
